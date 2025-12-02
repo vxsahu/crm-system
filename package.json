@@ -1,5 +1,5 @@
 {
-  "name": "temp_next",
+  "name": "next-crm",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie": "^1.1.1",
     "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.555.0",
     "mongoose": "^9.0.0",
     "next": "16.0.5",

@@ -18,6 +18,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate email domain
+    if (!email.toLowerCase().endsWith('@fixswift.in')) {
+      return NextResponse.json(
+        { error: 'Only @fixswift.in emails are allowed' },
+        { status: 403 }
+      );
+    }
+
     // Find user
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {

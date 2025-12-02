@@ -18,6 +18,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate email domain
+    if (!email.toLowerCase().endsWith('@fixswift.in')) {
+      return NextResponse.json(
+        { error: 'Only @fixswift.in emails are allowed' },
+        { status: 400 }
+      );
+    }
+
     // Validate password length
     if (password.length < 6) {
       return NextResponse.json(

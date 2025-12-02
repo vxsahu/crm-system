@@ -58,34 +58,11 @@ export function InventoryProvider({ children }: { children: React.ReactNode }) {
 
   const addProducts = async (newProducts: Omit<Product, 'id'>[]) => {
     try {
-      console.log('Attempting to import products:', newProducts.length);
-      console.log('Sample product:', newProducts[0]);
-
-      const res = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newProducts),
-      });
-
-      // Get response body for better error messages
-      const responseData = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        console.error('Import failed:', {
-          status: res.status,
-          statusText: res.statusText,
-          data: responseData
-        });
-
-        const errorMessage = responseData?.details || responseData?.error || `Failed to import products (${res.status})`;
-        throw new Error(errorMessage);
-      }
-
-      console.log('Import successful:', responseData);
+      await inventoryService.importCSV(newProducts);
       await loadData();
     } catch (error) {
       console.error('addProducts error:', error);
-      throw error; // Re-throw to be caught by ImportModal
+      throw error;
     }
   };
 
@@ -100,28 +77,12 @@ export function InventoryProvider({ children }: { children: React.ReactNode }) {
   };
 
   const deleteProducts = async (ids: string[]) => {
-    const res = await fetch('/api/products/bulk', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids }),
-    });
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.details || 'Failed to delete products');
-    }
+    await inventoryService.deleteBulk(ids);
     await loadData();
   };
 
   const updateProductsStatus = async (ids: string[], status: string) => {
-    const res = await fetch('/api/products/bulk', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids, status }),
-    });
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.details || 'Failed to update products');
-    }
+    await inventoryService.updateStatusBulk(ids, status);
     await loadData();
   };
 

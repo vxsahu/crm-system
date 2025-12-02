@@ -50,44 +50,79 @@ export async function POST(request: Request) {
       }
 
       // Check for duplicates in the incoming list itself
-      const tagMap = new Map();
-      const serialMap = new Map();
+      const tagMap = new Map<string, number[]>(); // Map tag to row numbers
+      const serialMap = new Map<string, number[]>(); // Map serial to row numbers
+
+      body.forEach((item: any, index: number) => {
+        const rowNum = index + 2; // Excel row (accounting for header)
+        
+        // Track tag numbers
+        if (!tagMap.has(item.tagNumber)) {
+          tagMap.set(item.tagNumber, []);
+        }
+        tagMap.get(item.tagNumber)!.push(rowNum);
+        
+        // Track serial numbers (skip N/A to allow multiple N/A entries)
+        if (item.serialNumber && item.serialNumber !== 'N/A') {
+          if (!serialMap.has(item.serialNumber)) {
+            serialMap.set(item.serialNumber, []);
+          }
+          serialMap.get(item.serialNumber)!.push(rowNum);
+        }
+      });
+
+      // Find duplicates
       const duplicatesInRequest: string[] = [];
 
-      body.forEach((item: any) => {
-        if (tagMap.has(item.tagNumber)) duplicatesInRequest.push(`Duplicate Tag in file: ${item.tagNumber}`);
-        tagMap.set(item.tagNumber, true);
+      tagMap.forEach((rows, tag) => {
+        if (rows.length > 1) {
+          duplicatesInRequest.push(`Tag "${tag}" in rows: ${rows.join(', ')}`);
+        }
+      });
 
-        if (serialMap.has(item.serialNumber)) duplicatesInRequest.push(`Duplicate Serial in file: ${item.serialNumber}`);
-        serialMap.set(item.serialNumber, true);
+      serialMap.forEach((rows, serial) => {
+        if (rows.length > 1) {
+          duplicatesInRequest.push(`Serial "${serial}" in rows: ${rows.join(', ')}`);
+        }
       });
 
       if (duplicatesInRequest.length > 0) {
         return NextResponse.json({
-          error: 'Duplicate items in file',
-          details: duplicatesInRequest.slice(0, 5).join(', ') + (duplicatesInRequest.length > 5 ? '...' : '')
+          error: 'Duplicate items found in file',
+          details: duplicatesInRequest.slice(0, 5).join(' | ') + (duplicatesInRequest.length > 5 ? ' | ...' : '')
         }, { status: 400 });
       }
 
-      // Check for duplicates in Database
+      // Check for duplicates in Database (exclude N/A serials)
       const tagNumbers = body.map((p: any) => p.tagNumber);
-      const serialNumbers = body.map((p: any) => p.serialNumber);
+      const serialNumbers = body
+        .map((p: any) => p.serialNumber)
+        .filter((s: string) => s && s !== 'N/A');
 
-      const existingTags = await Product.find({ tagNumber: { $in: tagNumbers } }).select('tagNumber');
-      const existingSerials = await Product.find({ serialNumber: { $in: serialNumbers } }).select('serialNumber');
+      const existingTags = await Product.find({ 
+        tagNumber: { $in: tagNumbers } 
+      }).select('tagNumber');
+
+      const existingSerials = serialNumbers.length > 0 
+        ? await Product.find({ 
+            serialNumber: { $in: serialNumbers } 
+          }).select('serialNumber')
+        : [];
 
       const dbDuplicates: string[] = [];
       if (existingTags.length > 0) {
-        dbDuplicates.push(`Tags already exist: ${existingTags.map(p => p.tagNumber).join(', ')}`);
+        const duplicateTags = existingTags.map(p => `"${p.tagNumber}"`).join(', ');
+        dbDuplicates.push(`Tag numbers already in database: ${duplicateTags}`);
       }
       if (existingSerials.length > 0) {
-        dbDuplicates.push(`Serials already exist: ${existingSerials.map(p => p.serialNumber).join(', ')}`);
+        const duplicateSerials = existingSerials.map(p => `"${p.serialNumber}"`).join(', ');
+        dbDuplicates.push(`Serial numbers already in database: ${duplicateSerials}`);
       }
 
       if (dbDuplicates.length > 0) {
         return NextResponse.json({
           error: 'Duplicate items found in database',
-          details: dbDuplicates.join('; ')
+          details: dbDuplicates.join(' | ')
         }, { status: 409 });
       }
 

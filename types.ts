@@ -18,10 +18,13 @@ export interface Product {
   category: string;
   specifications: string; // CPU, Processor, Mac Model combined or specific field
   remark?: string;
+  gateNumber?: string;
   status: ProductStatus;
   billingStatus: BillingStatus;
   invoiceNumber?: string;
   purchasePrice: number;
+  soldDate?: string;
+  soldPrice?: number;
 }
 
 export interface DashboardStats {

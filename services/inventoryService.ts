@@ -49,16 +49,58 @@ export const inventoryService = {
   },
 
   async importCSV(products: Omit<Product, 'id'>[]): Promise<Product[]> {
-    const res = await fetch(API_URL, {
-      method: 'POST',
+    const CHUNK_SIZE = 500;
+    const chunks = [];
+    
+    // Split into chunks
+    for (let i = 0; i < products.length; i += CHUNK_SIZE) {
+      chunks.push(products.slice(i, i + CHUNK_SIZE));
+    }
+
+    const allCreatedProducts: Product[] = [];
+
+    // Process chunks sequentially
+    for (const chunk of chunks) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(chunk),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.error('Failed to import chunk:', errorData);
+        throw new Error(errorData.details || 'Failed to import products');
+      }
+
+      const createdChunk = await res.json();
+      allCreatedProducts.push(...createdChunk);
+    }
+
+    return allCreatedProducts;
+  },
+
+  async deleteBulk(ids: string[]): Promise<void> {
+    const res = await fetch(`${API_URL}/bulk`, {
+      method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(products),
+      body: JSON.stringify({ ids }),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error('Failed to import products:', errorData);
-      throw new Error(errorData.details || 'Failed to import products');
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.details || 'Failed to delete products');
     }
-    return res.json();
+  },
+
+  async updateStatusBulk(ids: string[], status: string): Promise<void> {
+    const res = await fetch(`${API_URL}/bulk`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids, status }),
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.details || 'Failed to update products');
+    }
   }
 };

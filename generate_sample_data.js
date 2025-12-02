@@ -63,6 +63,7 @@ function generateSampleData(numRecords = 50) {
             'Billing': billingStatus,
             'Invoice No': invoiceNo,
             'Price': Math.floor(15000 + Math.random() * 65000),
+            'Gate No': `GP-${Math.floor(100 + Math.random() * 900)}`,
             'Remark': `Generated Test Data. Gate Pass: GP-${Math.floor(100 + Math.random() * 900)}`
         };
         data.push(row);

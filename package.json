@@ -9,11 +9,22 @@
     "lint": "eslint"
   },
   "dependencies": {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
     "@base-ui-components/react": "^1.0.0-beta.7",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+<<<<<<< Updated upstream
     "cookie": "^1.1.1",
+=======
+=======
+    "bcryptjs": "^3.0.3",
+    "cookie": "^1.1.1",
+>>>>>>> f06af5fe65704c70ee7d1694f18b7512f0b19128
+>>>>>>> Stashed changes
     "dotenv": "^17.2.3",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.555.0",

@@ -49,7 +49,7 @@ UserSchema.pre('save', async function (this: IUser) {
     const salt = await bcrypt.genSalt(10);
     const password = this.password as string;
     this.password = await bcrypt.hash(password, salt);
-  } catch (error: any) {
+  } catch (error) {
     throw error;
   }
 });

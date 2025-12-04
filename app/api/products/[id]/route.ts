@@ -47,18 +47,18 @@ export async function PUT(
 
     // Enhanced error details
     const errorDetails = {
-      message: error.message,
-      name: error.name,
-      code: error.code,
-      validationErrors: error.errors ? Object.keys(error.errors).map(key => ({
+      message: error instanceof Error ? error.message : 'Unknown error',
+      name: error instanceof Error ? error.name : 'Error',
+      code: (error as any).code,
+      validationErrors: (error as any).errors ? Object.keys((error as any).errors).map((key: string) => ({
         field: key,
-        message: error.errors[key].message
+        message: (error as any).errors[key].message
       })) : undefined
     };
 
     return NextResponse.json({ 
       error: 'Failed to update product',
-      details: error.message || String(error),
+      details: error instanceof Error ? error.message : String(error),
       validation: errorDetails.validationErrors
     }, { status: 500 });
   }

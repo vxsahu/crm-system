@@ -4,7 +4,7 @@ import { Package } from 'lucide-react';
 interface RecentActivityProps {
   activities: Array<{
     type: string;
-    icon: any;
+    icon: React.ElementType;
     color: string;
     title: string;
     description: string;

@@ -3,7 +3,12 @@ import { Product, ProductStatus, BillingStatus } from '../types';
 import { ShoppingBag, RotateCcw, AlertCircle, Plus } from 'lucide-react';
 
 export const useDashboardStats = (products: Product[]) => {
-  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setNow(new Date());
+  }, []);
 
   // Calculate Stats
   const totalInventory = products.length;
@@ -22,27 +27,28 @@ export const useDashboardStats = (products: Product[]) => {
     .filter(p => p.status === ProductStatus.SOLD)
     .reduce((sum, p) => sum + (p.purchasePrice || 0), 0), [products]);
 
-  // Calculate monthly revenue in useEffect to avoid hydration mismatch
-  useEffect(() => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const revenue = products
+  // Calculate monthly revenue
+  const monthlyRevenue = useMemo(() => {
+    if (!now) return 0;
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    return products
       .filter(p => {
         if (p.status !== ProductStatus.SOLD) return false;
         const purchaseDate = new Date(p.purchaseDate);
         return purchaseDate.getMonth() === currentMonth && purchaseDate.getFullYear() === currentYear;
       })
       .reduce((sum, p) => sum + (p.purchasePrice || 0), 0);
-    setMonthlyRevenue(revenue);
-  }, [products]);
+  }, [products, now]);
 
   // Calculate average sale value
   const averageSale = soldCount > 0 ? totalRevenue / soldCount : 0;
 
   // Aggregate monthly revenue data for last 6 months
   const monthlyRevenueData = useMemo(() => {
+    if (!now) return [];
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const now = new Date();
     const data = [];
 
     for (let i = 5; i >= 0; i--) {
@@ -71,7 +77,7 @@ export const useDashboardStats = (products: Product[]) => {
       });
     }
     return data;
-  }, [products]);
+  }, [products, now]);
 
   // Aggregate revenue by category
   const categoryRevenueData = useMemo(() => {
@@ -94,7 +100,7 @@ export const useDashboardStats = (products: Product[]) => {
   const recentActivities = useMemo(() => {
     const activities: Array<{
       type: string;
-      icon: any;
+      icon: React.ElementType;
       color: string;
       title: string;
       description: string;

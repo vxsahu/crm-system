@@ -150,7 +150,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
   }, [techSpecs, isTechCategory, isOpen]);
 
 
-  const handleChange = (field: keyof Product, value: any) => {
+  const handleChange = (field: keyof Product, value: Product[keyof Product]) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 

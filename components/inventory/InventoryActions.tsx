@@ -1,18 +1,16 @@
 import React from 'react';
-import { Download, Plus, AlertCircle } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
 
 interface InventoryActionsProps {
   handleExport: () => void;
   setIsImportModalOpen: (isOpen: boolean) => void;
   handleAddProduct: () => void;
-  handleUnbilledFilter: () => void;
 }
 
 export const InventoryActions: React.FC<InventoryActionsProps> = ({
   handleExport,
   setIsImportModalOpen,
-  handleAddProduct,
-  handleUnbilledFilter
+  handleAddProduct
 }) => {
   return (
     <div className="flex gap-3 w-full xl:w-auto overflow-x-auto pb-1 xl:pb-0 justify-start xl:justify-end no-scrollbar">

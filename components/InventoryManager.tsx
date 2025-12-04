@@ -52,16 +52,20 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
   useEffect(() => {
     const status = searchParams.get('status');
     const billing = searchParams.get('billing');
-    if (status) setFilterStatus(status);
-    if (billing) setFilterBilling(billing);
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (status && status !== filterStatus) setFilterStatus(status);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (billing && billing !== filterBilling) setFilterBilling(billing);
+  }, [searchParams, filterStatus, filterBilling]);
 
   useEffect(() => {
     if (initialFilters) {
-      setFilterStatus(initialFilters.status);
-      setFilterBilling(initialFilters.billing);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (initialFilters.status !== filterStatus) setFilterStatus(initialFilters.status);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (initialFilters.billing !== filterBilling) setFilterBilling(initialFilters.billing);
     }
-  }, [initialFilters]);
+  }, [initialFilters, filterStatus, filterBilling]);
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -225,7 +229,6 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
                 handleExport={handleExport}
                 setIsImportModalOpen={setIsImportModalOpen}
                 handleAddProduct={handleAddProduct}
-                handleUnbilledFilter={handleUnbilledFilter}
               />
             </div>
           </div>
@@ -254,7 +257,6 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
                 handleExport={handleExport}
                 setIsImportModalOpen={setIsImportModalOpen}
                 handleAddProduct={handleAddProduct}
-                handleUnbilledFilter={handleUnbilledFilter}
               />
             </div>
           </div>

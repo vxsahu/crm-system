@@ -24,7 +24,7 @@ export function InventoryProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const { user, loading: authLoading } = useAuth();
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     // Only load data if user is authenticated
     if (!user) {
       setProducts([]);
@@ -42,14 +42,14 @@ export function InventoryProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     // Only load data when auth is ready and user is authenticated
     if (!authLoading) {
       loadData();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, loadData]);
 
   const addProduct = async (product: Omit<Product, 'id'>) => {
     await inventoryService.add(product);

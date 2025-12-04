@@ -41,7 +41,7 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-500 px-6 py-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
         <div>
           <h2 className="text-base font-bold text-primary-900">Operational Overview</h2>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, PackageSearch, Settings, LogOut, Menu, Globe, User } from 'lucide-react';
+import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function Sidebar() {
@@ -22,11 +23,15 @@ export function Sidebar() {
     <>
       {/* Mobile Header */}
       <header className="lg:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center fixed top-0 left-0 right-0 h-16 z-40">
-         <img 
-          src="https://i0.wp.com/fixswift.in/wp-content/uploads/2024/10/Group-69084.webp" 
-          alt="FixSwift Logo" 
-          className="h-8 w-auto object-contain" 
-         />
+         <div className="relative h-8 w-32">
+           <Image 
+            src="/logo.webp" 
+            alt="FixSwift Logo" 
+            fill
+            className="object-contain"
+            priority
+           />
+         </div>
          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-700 hover:bg-gray-100 rounded-md">
            <Menu className="w-5 h-5" />
          </button>
@@ -35,11 +40,15 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white text-slate-600 transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} pt-16 lg:pt-0`}>
         <div className="hidden lg:flex items-center h-20 px-6">
-          <img 
-            src="https://i0.wp.com/fixswift.in/wp-content/uploads/2024/10/Group-69084.webp" 
-            alt="FixSwift Logo" 
-            className="h-8 w-auto object-contain" 
-          />
+          <div className="relative h-8 w-32">
+            <Image 
+              src="https://i0.wp.com/fixswift.in/wp-content/uploads/2024/10/Group-69084.webp" 
+              alt="FixSwift Logo" 
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
         </div>
         
         <div className="px-4 py-2">

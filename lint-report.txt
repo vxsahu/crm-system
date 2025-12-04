@@ -1,0 +1,121 @@
+
+> next-crm@0.1.0 lint
+> eslint
+
+
+/Users/admin/Documents/crm-system/app/api/products/[id]/route.ts
+  26:13  warning  '_id' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  26:22  warning  'bodyId' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  26:30  warning  'createdAt' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  26:41  warning  'updatedAt' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  41:19  error    Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/app/api/products/bulk/route.ts
+  29:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  72:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/app/api/products/export/route.ts
+  16:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/app/api/products/route.ts
+   56:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   97:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/app/login/page.tsx
+   22:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  117:18  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/admin/Documents/crm-system/app/register/page.tsx
+  37:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/components/Dashboard.tsx
+  4:10  warning  'BillingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+  5:10  warning  'AlertCircle' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/admin/Documents/crm-system/components/ImportModal.tsx
+   62:72  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/components/InventoryManager.tsx
+  55:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/admin/Documents/crm-system/components/InventoryManager.tsx:55:17
+  53 |     const status = searchParams.get('status');
+  54 |     const billing = searchParams.get('billing');
+> 55 |     if (status) setFilterStatus(status);
+     |                 ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  56 |     if (billing) setFilterBilling(billing);
+  57 |   }, [searchParams]);
+  58 |  react-hooks/set-state-in-effect
+  61:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/admin/Documents/crm-system/components/InventoryManager.tsx:61:7
+  59 |   useEffect(() => {
+  60 |     if (initialFilters) {
+> 61 |       setFilterStatus(initialFilters.status);
+     |       ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  62 |       setFilterBilling(initialFilters.billing);
+  63 |     }
+  64 |   }, [initialFilters]);                                              react-hooks/set-state-in-effect
+
+/Users/admin/Documents/crm-system/components/ProductModal.tsx
+  153:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/components/Sidebar.tsx
+  25:10  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  38:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/admin/Documents/crm-system/components/dashboard/RecentActivity.tsx
+  7:11  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/components/inventory/InventoryActions.tsx
+   2:26  warning  'AlertCircle' is defined but never used           @typescript-eslint/no-unused-vars
+  15:3   warning  'handleUnbilledFilter' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/admin/Documents/crm-system/components/product-modal/BasicInfoSection.tsx
+  6:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/components/product-modal/FinancialSection.tsx
+  7:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/admin/Documents/crm-system/contexts/InventoryContext.tsx
+  52:6  warning  React Hook useEffect has a missing dependency: 'loadData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/admin/Documents/crm-system/generate_sample_data.js
+  1:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/admin/Documents/crm-system/hooks/useDashboardStats.ts
+  36:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/admin/Documents/crm-system/hooks/useDashboardStats.ts:36:5
+  34 |       })
+  35 |       .reduce((sum, p) => sum + (p.purchasePrice || 0), 0);
+> 36 |     setMonthlyRevenue(revenue);
+     |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  37 |   }, [products]);
+  38 |
+  39 |   // Calculate average sale value  react-hooks/set-state-in-effect
+  97:13  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+✖ 33 problems (22 errors, 11 warnings)
+

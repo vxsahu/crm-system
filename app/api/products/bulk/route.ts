@@ -26,11 +26,11 @@ export async function DELETE(request: Request) {
             deletedCount: result.deletedCount
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error) {
         console.error('Bulk delete failed:', error);
         return NextResponse.json({
             error: 'Failed to delete products',
-            details: error.message || String(error)
+            details: error instanceof Error ? error.message : String(error)
         }, { status: 500 });
     }
 }
@@ -69,11 +69,11 @@ export async function PATCH(request: Request) {
             modifiedCount: result.modifiedCount
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error) {
         console.error('Bulk update failed:', error);
         return NextResponse.json({
             error: 'Failed to update products',
-            details: error.message || String(error)
+            details: error instanceof Error ? error.message : String(error)
         }, { status: 500 });
     }
 }

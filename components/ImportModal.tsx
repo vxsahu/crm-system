@@ -59,24 +59,25 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-      const parsedProducts: Omit<Product, 'id'>[] = jsonData.map((row: any) => {
+      const parsedProducts: Omit<Product, 'id'>[] = jsonData.map((row: unknown) => {
+        const r = row as Record<string, unknown>;
         // Detect Format (Legacy vs Export)
-        const isExportFormat = 'Tag Number' in row;
+        const isExportFormat = 'Tag Number' in r;
 
         // Mapping Logic
         let tagNumber, productName, serialNumber, category, specifications, status, billingStatus, purchasePrice, invoiceNumber, remark, dateRaw, sellInvoiceNumber;
 
         if (isExportFormat) {
-          tagNumber = String(row['Tag Number'] || '');
-          productName = String(row['Product Name'] || '');
-          dateRaw = row['Purchase Date'];
-          serialNumber = String(row['Serial No'] || 'N/A');
-          status = row['Status'] as ProductStatus;
-          billingStatus = row['Billing'] as BillingStatus;
-          invoiceNumber = row['Invoice No'] !== 'N/A' ? String(row['Invoice No']) : '';
-          purchasePrice = Number(row['Price']) || 0;
-          sellInvoiceNumber = row['Sell Invoice No'] || '';
-          remark = row['Remark'] || '';
+          tagNumber = String(r['Tag Number'] || '');
+          productName = String(r['Product Name'] || '');
+          dateRaw = r['Purchase Date'];
+          serialNumber = String(r['Serial No'] || 'N/A');
+          status = r['Status'] as ProductStatus;
+          billingStatus = r['Billing'] as BillingStatus;
+          invoiceNumber = r['Invoice No'] !== 'N/A' ? String(r['Invoice No']) : '';
+          purchasePrice = Number(r['Price']) || 0;
+          sellInvoiceNumber = r['Sell Invoice No'] || '';
+          remark = r['Remark'] || '';
           
           // Infer category/specs if possible or set defaults
           category = 'Other'; // Export format doesn't have separate category column currently? 
@@ -86,30 +87,30 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
           specifications = ''; 
         } else {
           // Legacy Format
-          tagNumber = String(row['Tag No.'] || '');
-          productName = `${row['Brand'] || ''} ${row['Model -No.'] || ''}`.trim();
-          dateRaw = row['Date'];
-          serialNumber = String(row['Serial-No.'] || 'N/A');
+          tagNumber = String(r['Tag No.'] || '');
+          productName = `${r['Brand'] || ''} ${r['Model -No.'] || ''}`.trim();
+          dateRaw = r['Date'];
+          serialNumber = String(r['Serial-No.'] || 'N/A');
           
-          const statusRaw = row['Status'];
+          const statusRaw = r['Status'];
           status = statusRaw === 'Sale' ? ProductStatus.SOLD : ProductStatus.IN_STOCK;
           
-          const billingRaw = row['Invoice No.'];
+          const billingRaw = r['Invoice No.'];
           billingStatus = billingRaw === 'Billing Pending' ? BillingStatus.UNBILLED : BillingStatus.BILLED;
           
           invoiceNumber = billingRaw !== 'Billing Pending' ? String(billingRaw) : '';
-          purchasePrice = Number(row['Tax Inculding Amount']) || 0;
-          remark = `Imported from sheet. Gate Pass: ${row['Gate Pass No'] || 'N/A'}`;
+          purchasePrice = Number(r['Tax Inculding Amount']) || 0;
+          remark = `Imported from sheet. Gate Pass: ${r['Gate Pass No'] || 'N/A'}`;
 
           // Construct specifications
           const specsParts = [];
-          if (row['Cpu']) specsParts.push(`CPU: ${row['Cpu']}`);
-          if (row['Ram']) specsParts.push(`RAM: ${row['Ram']}`);
-          if (row['HDD']) specsParts.push(`Storage: ${row['HDD']}`);
-          specifications = specsParts.join(' | ') || row['Model -No.'] || '';
+          if (r['Cpu']) specsParts.push(`CPU: ${r['Cpu']}`);
+          if (r['Ram']) specsParts.push(`RAM: ${r['Ram']}`);
+          if (r['HDD']) specsParts.push(`Storage: ${r['HDD']}`);
+          specifications = specsParts.join(' | ') || r['Model -No.'] || '';
 
           // Map Category
-          category = row['Product'] || 'Other';
+          category = (r['Product'] as string) || 'Other';
           if (category === 'TFT') category = 'Monitor';
           if (category === 'Phone') category = 'Mobile';
         }
@@ -133,13 +134,13 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
           purchaseDate,
           serialNumber,
           category,
-          specifications,
+          specifications: String(specifications),
           status: status as ProductStatus,
           billingStatus: billingStatus as BillingStatus,
           purchasePrice,
           invoiceNumber,
-          sellInvoiceNumber,
-          remark
+          sellInvoiceNumber: String(sellInvoiceNumber || ''),
+          remark: String(remark)
         };
       });
 
@@ -161,10 +162,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
       // Reset state
       setFile(null);
       setPreviewData([]);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Import error:', err);
       // Display specific error details if available
-      const errorMessage = err.message || 'Failed to import products.';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to import products.';
       setError(errorMessage);
     } finally {
       setIsProcessing(false);

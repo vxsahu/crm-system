@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     const billing = searchParams.get('billing');
     const search = searchParams.get('search');
 
-    const query: any = {};
+    const query: Record<string, any> = {};
 
     // Apply Filters
     if (status && status !== 'ALL') {

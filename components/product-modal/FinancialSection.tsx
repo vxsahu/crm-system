@@ -4,7 +4,7 @@ import { CheckCircle, AlertCircle } from 'lucide-react';
 
 interface FinancialSectionProps {
   formData: Partial<Product>;
-  handleChange: (field: keyof Product, value: any) => void;
+  handleChange: (field: keyof Product, value: Product[keyof Product]) => void;
 }
 
 export const FinancialSection: React.FC<FinancialSectionProps> = ({ formData, handleChange }) => {

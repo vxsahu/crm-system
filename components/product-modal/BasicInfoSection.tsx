@@ -3,7 +3,7 @@ import { Product } from '@/types';
 
 interface BasicInfoSectionProps {
   formData: Partial<Product>;
-  handleChange: (field: keyof Product, value: any) => void;
+  handleChange: (field: keyof Product, value: Product[keyof Product]) => void;
 }
 
 export const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ formData, handleChange }) => {

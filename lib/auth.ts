@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import User, { IUser } from '@/models/User';
 import dbConnect from './mongodb';
 
@@ -35,7 +35,7 @@ export function generateToken(user: IUser): string {
 export function verifyToken(token: string): JWTPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -65,7 +65,7 @@ export async function clearAuthCookie() {
 /**
  * Get current user from request
  */
-export async function getCurrentUser(request?: NextRequest): Promise<IUser | null> {
+export async function getCurrentUser(): Promise<IUser | null> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get(TOKEN_NAME)?.value;

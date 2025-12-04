@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend } from 'recharts';
 
@@ -7,7 +9,7 @@ interface SalesVolumeChartProps {
 
 export const SalesVolumeChart: React.FC<SalesVolumeChartProps> = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
+    <div className="bg-white p-6 rounded-xl border border-neutral-200">
       <h3 className="text-base font-semibold text-primary-900 mb-2">Sales Volume</h3>
       <p className="text-sm text-primary-700 mb-4">Number of sales per month</p>
       <div className="h-64">

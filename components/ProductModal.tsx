@@ -180,11 +180,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
 
   return (
 
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4 animate-in fade-in duration-200">
+      <div className="bg-white w-full sm:rounded-xl sm:max-w-2xl h-[90vh] sm:h-auto sm:max-h-[90vh] overflow-hidden flex flex-col animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-200 rounded-t-2xl">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-100 shrink-0">
           <h2 className="text-lg font-bold text-slate-800">
             {initialData ? 'Edit Product' : 'Add New Product'}
           </h2>
@@ -197,11 +197,11 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
         </div>
 
         {/* Form Body */}
-        <div className="overflow-y-auto p-6 custom-scrollbar">
-          <form id="product-form" onSubmit={handleSubmit} className="space-y-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
+          <form id="product-form" onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 pb-20 sm:pb-0">
             
             {/* Basic Info Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                <BasicInfoSection formData={formData} handleChange={handleChange} />
             </div>
 
@@ -237,7 +237,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-100 flex justify-end gap-3 bg-white">
+        <div className="p-4 sm:p-6 border-t border-slate-100 flex justify-end gap-3 bg-white shrink-0 safe-area-bottom">
           <button
             type="button"
             onClick={onClose}
@@ -250,7 +250,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
             type="submit"
             form="product-form"
             disabled={isSaving}
-            className="px-6 py-2 text-sm font-medium text-white bg-[#369282] hover:bg-[#2d7a6d] rounded-lg shadow-sm transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex-1 sm:flex-none justify-center px-6 py-2 text-sm font-medium text-white bg-[#369282] hover:bg-[#2d7a6d] rounded-lg transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSaving ? (
               <>

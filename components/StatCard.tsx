@@ -19,7 +19,7 @@ export const StatCard: React.FC<StatCardProps> = ({ title, value, icon: Icon, tr
   return (
     <div 
       onClick={onClick}
-      className={`gap-2 bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col justify-between transition-all duration-200 ${onClick ? 'cursor-pointer hover:shadow-md hover:border-brand-200' : ''}`}
+      className={`gap-2 bg-white rounded-xlborder border-slate-200 p-4 flex flex-col justify-between transition-all duration-200 ${onClick ? 'cursor-pointer hover:shadow-md hover:border-brand-200' : ''}`}
     >
       <div className="flex items-center justify-between">
         <h3 className="text-slate-500 text-sm font-medium uppercase tracking-wider">{title}</h3>

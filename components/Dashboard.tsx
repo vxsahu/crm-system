@@ -42,11 +42,18 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 px-6 py-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2 gap-4">
         <div>
           <h2 className="text-base font-bold text-primary-900">Operational Overview</h2>
           <p className="text-sm text-primary-700">Real-time insight into inventory health and financial performance.</p>
         </div>
+        <button
+          onClick={() => router.push('/inventory?action=add')}
+          className="flex items-center gap-2 bg-[#369282] hover:bg-[#2d7a6d] text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+        >
+          <span className="text-lg leading-none">+</span>
+          Add Product
+        </button>
       </div>
 
       {/* Financial Metrics */}

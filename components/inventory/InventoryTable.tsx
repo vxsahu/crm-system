@@ -32,101 +32,127 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
   isFiltered,
   clearFilters
 }) => {
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
-    <div className="flex-1 overflow-hidden flex flex-col">
+    <div className="flex-1 overflow-hidden flex flex-col bg-white rounded-lg border border-slate-200mx-4 lg:mx-8 mb-4">
       <div className="flex-1 overflow-auto custom-scrollbar">
         <Table>
-          <TableHeader className="sticky top-0 bg-slate-50 z-10 shadow-sm">
-            <TableRow>
-              <TableHead className="w-12">
+          <TableHeader className="sticky top-0 bg-slate-50/95 backdrop-blur supports-[backdrop-filter]:bg-slate-50/60 z-10">
+            <TableRow className="hover:bg-transparent border-b border-slate-200">
+              <TableHead className="w-10 py-2 pl-4">
                 <input
                   type="checkbox"
                   checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
                   onChange={handleSelectAll}
-                  className="w-4 h-4 text-brand-600 border-slate-300 rounded focus:ring-brand-500 cursor-pointer translate-y-0.5"
+                  className="w-3.5 h-3.5 text-brand-600 border-slate-300 rounded focus:ring-brand-500 cursor-pointer translate-y-0.5"
                 />
               </TableHead>
-              <TableHead>Tag #</TableHead>
-              <TableHead>Product</TableHead>
-              <TableHead>Purchase Info</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Billing</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead className="text-right w-[100px]">Actions</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider whitespace-nowrap">Tag #</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider">Product</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider whitespace-nowrap">Purchase Date</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider whitespace-nowrap">Status</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider whitespace-nowrap">Billing</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider whitespace-nowrap">Price</TableHead>
+              <TableHead className="py-2 text-xs font-semibold text-slate-600 uppercase tracking-wider text-right pr-4 w-[80px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
-                <TableRow key={product.id} className="group">
-                  <TableCell>
+                <TableRow key={product.id} className="group hover:bg-slate-50/80 transition-colors border-b border-slate-100 last:border-0">
+                  <TableCell className="py-2.5 pl-4">
                     <input
                       type="checkbox"
                       checked={selectedProducts.includes(product.id)}
                       onChange={() => handleSelectProduct(product.id)}
-                      className="w-4 h-4 text-brand-600 border-slate-300 rounded focus:ring-brand-500 cursor-pointer translate-y-0.5"
+                      className="w-3.5 h-3.5 text-brand-600 border-slate-300 rounded focus:ring-brand-500 cursor-pointer translate-y-0.5"
                     />
                   </TableCell>
-                  <TableCell className="font-medium">{product.tagNumber}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-slate-800">{product.productName}</span>
-                      <span className="text-xs text-slate-500 truncate max-w-[200px]">{product.specifications}</span>
-                      <span className="text-xs text-slate-400">SN: {product.serialNumber}</span>
+                  <TableCell className="py-2.5 font-medium text-sm text-slate-700 whitespace-nowrap">{product.tagNumber}</TableCell>
+                  <TableCell className="py-2.5">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-medium text-sm text-slate-900 leading-tight">{product.productName}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-slate-500 truncate max-w-[240px]" title={product.specifications}>
+                          {product.specifications}
+                        </span>
+                        {product.serialNumber && product.serialNumber !== 'N/A' && (
+                          <span className="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                            SN: {product.serialNumber}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-slate-600">{product.purchaseDate}</TableCell>
-                  <TableCell>
+                  <TableCell className="py-2.5 text-sm text-slate-600 whitespace-nowrap">
+                    {formatDate(product.purchaseDate)}
+                  </TableCell>
+                  <TableCell className="py-2.5 whitespace-nowrap">
                     <Badge 
                       variant="outline" 
                       className={`
-                        ${product.status === ProductStatus.IN_STOCK ? 'bg-brand-50 text-brand-700 border-brand-100' : ''}
-                        ${product.status === ProductStatus.SOLD ? 'bg-green-50 text-green-700 border-green-100' : ''}
-                        ${product.status === ProductStatus.RETURNED ? 'bg-danger-50 text-danger-700 border-danger-100' : ''}
+                        h-5 px-2 text-[10px] font-medium border
+                        ${product.status === ProductStatus.IN_STOCK ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : ''}
+                        ${product.status === ProductStatus.SOLD ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}
+                        ${product.status === ProductStatus.RETURNED ? 'bg-rose-50 text-rose-700 border-rose-200' : ''}
                       `}
                     >
                       {product.status}
                     </Badge>
                     {product.status === ProductStatus.SOLD && product.sellInvoiceNumber && (
-                      <div className="flex items-center gap-1 mt-1.5 text-xs text-slate-600 font-medium">
-                        <span>{product.sellInvoiceNumber}</span>
+                      <div className="flex items-center gap-1.5 mt-2 px-2 py-1 bg-slate-100 rounded border border-slate-200 w-fit">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Inv:</span>
+                        <span className="text-[11px] font-semibold text-slate-700 font-mono">{product.sellInvoiceNumber}</span>
                       </div>
                     )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-2.5 whitespace-nowrap">
                     {product.billingStatus === BillingStatus.BILLED ? (
-                      <div className="flex items-center text-green-600">
-                        <CheckCircle className="w-4 h-4 mr-1.5" />
+                      <div className="flex items-center text-emerald-600">
+                        <CheckCircle className="w-3.5 h-3.5 mr-1.5" />
                         <div className="flex flex-col">
-                          <span className="text-xs font-medium">Billed</span>
-                          <span className="text-[10px] text-slate-400">{product.invoiceNumber}</span>
+                          <span className="text-[11px] font-medium leading-none">Billed</span>
+                          {product.invoiceNumber && (
+                            <span className="text-[9px] text-slate-400 mt-0.5">{product.invoiceNumber}</span>
+                          )}
                         </div>
                       </div>
                     ) : (
-                      <Badge variant="outline" className="bg-accent-50 text-accent-700 border-accent-100">
+                      <Badge variant="outline" className="h-5 px-2 text-[10px] font-medium bg-amber-50 text-amber-700 border-amber-200">
                         <AlertCircle className="w-3 h-3 mr-1" />
                         Unbilled
                       </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="font-semibold text-slate-700">
+                  <TableCell className="py-2.5 font-semibold text-sm text-slate-700 whitespace-nowrap">
                     ₹{product.purchasePrice.toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                  <TableCell className="py-2.5 text-right pr-4 whitespace-nowrap">
+                    <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <button
                         onClick={() => handleEditProduct(product)}
-                        className="p-1.5 text-brand-600 hover:bg-brand-50 rounded-md transition-colors"
+                        className="p-1.5 text-slate-500 hover:text-brand-600 hover:bg-brand-50 rounded transition-colors"
                         title="Edit Details"
                       >
-                        <Edit2 className="w-4 h-4" />
+                        <Edit2 className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(product.id)}
-                        className="p-1.5 text-slate-400 hover:text-danger-600 hover:bg-danger-50 rounded-md transition-colors"
+                        className="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
                         title="Delete Entry"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </TableCell>
@@ -134,13 +160,17 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={8} className="h-32 text-center">
                   <div className="flex flex-col items-center justify-center py-8 text-slate-500">
-                    <Search className="w-12 h-12 text-slate-200 mb-3" />
-                    <p className="text-lg font-medium">No products found</p>
-                    <p className="text-sm text-slate-400">Try adjusting your search or filters</p>
+                    <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                      <Search className="w-6 h-6 text-slate-300" />
+                    </div>
+                    <p className="text-sm font-medium text-slate-900">No products found</p>
+                    <p className="text-xs text-slate-500 mt-1">Try adjusting your search or filters</p>
                     {isFiltered && (
-                      <button onClick={clearFilters} className="mt-3 text-brand-600 hover:underline">Clear Filters</button>
+                      <button onClick={clearFilters} className="mt-3 text-xs font-medium text-brand-600 hover:text-brand-700 hover:underline">
+                        Clear Filters
+                      </button>
                     )}
                   </div>
                 </TableCell>

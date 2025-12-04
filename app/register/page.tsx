@@ -54,7 +54,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className="bg-white rounded-2xl p-8 border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Error Message */}
             {error && (

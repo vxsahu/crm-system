@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip as RechartsTooltip } from 'recharts';
 
@@ -9,7 +11,7 @@ const CHART_COLORS = ['#0d9488', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444'];
 
 export const CategoryChart: React.FC<CategoryChartProps> = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
+    <div className="bg-white p-6 rounded-xl border border-neutral-200">
       <h3 className="text-base font-semibold text-primary-900 mb-2">Top Categories</h3>
       <p className="text-sm text-primary-700 mb-4">Revenue by product category</p>
       <div className="h-64">

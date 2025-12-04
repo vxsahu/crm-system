@@ -14,32 +14,34 @@ interface RecentActivityProps {
 
 export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
-      <h3 className="text-base font-semibold text-primary-900 mb-2">Recent Activity</h3>
-      <p className="text-sm text-primary-700 mb-4">Latest product updates and transactions</p>
-      <div className="space-y-3">
+    <div className="bg-white p-4 rounded-xlborder border-neutral-200">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold text-primary-900">Recent Activity</h3>
+        <span className="text-xs text-primary-500">Latest updates</span>
+      </div>
+      <div className="space-y-2">
         {activities.length > 0 ? (
           activities.map((activity, index) => {
             const Icon = activity.icon;
             return (
-              <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer">
-                <div className={`p-2 rounded-lg ${activity.color}`}>
-                  <Icon className="w-4 h-4" />
+              <div key={index} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer group">
+                <div className={`p-1.5 rounded-md ${activity.color} bg-opacity-10`}>
+                  <Icon className="w-3.5 h-3.5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-primary-900">{activity.title}</p>
-                  <p className="text-sm text-primary-600 truncate">{activity.description}</p>
+                  <p className="text-xs font-medium text-primary-900 truncate">{activity.title}</p>
+                  <p className="text-[11px] text-primary-500 truncate">{activity.description}</p>
                 </div>
                 {activity.value && (
-                  <div className="text-sm font-semibold text-primary-900">{activity.value}</div>
+                  <div className="text-xs font-semibold text-primary-700">{activity.value}</div>
                 )}
               </div>
             );
           })
         ) : (
-          <div className="text-center py-8 text-primary-500">
-            <Package className="w-12 h-12 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No recent activity</p>
+          <div className="text-center py-6 text-primary-400">
+            <Package className="w-8 h-8 mx-auto mb-1 opacity-40" />
+            <p className="text-xs">No recent activity</p>
           </div>
         )}
       </div>

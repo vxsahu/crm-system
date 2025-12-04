@@ -13,10 +13,10 @@ export const InventoryActions: React.FC<InventoryActionsProps> = ({
   handleAddProduct
 }) => {
   return (
-    <div className="flex gap-3 w-full xl:w-auto overflow-x-auto pb-1 xl:pb-0 justify-start xl:justify-end no-scrollbar">
+    <div className="flex gap-2 w-full lg:w-auto overflow-x-auto pb-1 lg:pb-0 justify-start lg:justify-end no-scrollbar">
       <button
         onClick={handleExport}
-        className="whitespace-nowrap px-4 py-2.5 bg-white text-slate-600 border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm"
+        className="whitespace-nowrap px-3 py-2 bg-white text-slate-600 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2"
       >
         <Download className="w-4 h-4" />
         <span className="hidden sm:inline">Export</span>
@@ -24,7 +24,7 @@ export const InventoryActions: React.FC<InventoryActionsProps> = ({
 
       <button
         onClick={() => setIsImportModalOpen(true)}
-        className="whitespace-nowrap px-4 py-2.5 bg-white text-slate-600 border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm"
+        className="whitespace-nowrap px-3 py-2 bg-white text-slate-600 border border-slate-200 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2"
       >
         <Download className="w-4 h-4 rotate-180" />
         <span className="hidden sm:inline">Import</span>
@@ -32,10 +32,11 @@ export const InventoryActions: React.FC<InventoryActionsProps> = ({
 
       <button
         onClick={handleAddProduct}
-        className="whitespace-nowrap px-4 py-2.5 bg-[#369282] text-white rounded-xl text-sm font-medium hover:bg-[#2d7a6d] transition-colors flex items-center gap-2 shadow-sm"
+        className="whitespace-nowrap px-3 py-2 bg-[#369282] text-white rounded-lg text-sm font-medium hover:bg-[#2d7a6d] transition-colors flex items-center gap-2"
       >
         <Plus className="w-4 h-4" />
-        Add Product
+        <span className="hidden sm:inline">Add Product</span>
+        <span className="sm:hidden">Add</span>
       </button>
     </div>
   );

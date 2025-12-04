@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend } from 'recharts';
 
@@ -13,7 +15,7 @@ export const InventoryDistributionChart: React.FC<InventoryDistributionChartProp
   returnedCount
 }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200 lg:col-span-2">
+    <div className="bg-white p-6 rounded-xl border border-neutral-200 lg:col-span-2">
       <h3 className="text-base font-semibold text-primary-900 mb-6">Inventory Distribution</h3>
       <div className="h-64" style={{ height: '250px' }}>
         <ResponsiveContainer width="100%" height="100%">

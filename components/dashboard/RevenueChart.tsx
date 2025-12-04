@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, Tooltip as RechartsTooltip } from 'recharts';
 
@@ -7,7 +9,7 @@ interface RevenueChartProps {
 
 export const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200">
+    <div className="bg-white p-6 rounded-xl border border-neutral-200">
       <h3 className="text-base font-semibold text-primary-900 mb-2">Revenue Trend</h3>
       <p className="text-sm text-primary-700 mb-4">Last 6 months sales performance</p>
       <div className="h-72">

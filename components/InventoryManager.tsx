@@ -67,6 +67,18 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
     }
   }, [initialFilters, filterStatus, filterBilling]);
 
+  // Handle URL actions (e.g. ?action=add)
+  useEffect(() => {
+    const action = searchParams.get('action');
+    if (action === 'add') {
+      setEditingProduct(undefined);
+      setIsModalOpen(true);
+      // Optional: Clear the param so it doesn't reopen on refresh, 
+      // but for "handy" usage, keeping it might be fine or we can replace URL.
+      // For now, let's keep it simple.
+    }
+  }, [searchParams]);
+
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const q = searchTerm.trim().toLowerCase();

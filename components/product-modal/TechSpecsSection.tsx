@@ -76,7 +76,7 @@ export const TechSpecsSection: React.FC<TechSpecsSectionProps> = ({
                             onClick={() => handleTechSpecChange('ram', opt === techSpecs.ram ? '' : opt)}
                             className={`px-4 py-2 text-xs font-medium rounded-lg border transition-all ${
                                 techSpecs.ram === opt 
-                                    ? 'bg-[#369282] text-white border-[#369282] shadow-sm' 
+                                    ? 'bg-[#369282] text-white border-[#369282]' 
                                     : 'bg-white text-slate-600 border-slate-200 hover:border-[#369282] hover:text-[#369282]'
                             }`}
                         >
@@ -97,7 +97,7 @@ export const TechSpecsSection: React.FC<TechSpecsSectionProps> = ({
                             onClick={() => handleTechSpecChange('storage', opt === techSpecs.storage ? '' : opt)}
                             className={`px-4 py-2 text-xs font-medium rounded-lg border transition-all ${
                                 techSpecs.storage === opt 
-                                    ? 'bg-[#369282] text-white border-[#369282] shadow-sm' 
+                                    ? 'bg-[#369282] text-white border-[#369282]' 
                                     : 'bg-white text-slate-600 border-slate-200 hover:border-[#369282] hover:text-[#369282]'
                             }`}
                         >

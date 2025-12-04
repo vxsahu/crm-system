@@ -78,6 +78,16 @@ export const FinancialSection: React.FC<FinancialSectionProps> = ({ formData, ha
               placeholder="0"
             />
           </div>
+          <div className="space-y-2 col-span-1 md:col-span-2">
+            <label className="block text-sm font-medium text-slate-700">Sell Invoice Number <span className="text-slate-400 font-normal">(Optional)</span></label>
+            <input
+              type="text"
+              value={formData.sellInvoiceNumber || ''}
+              onChange={(e) => handleChange('sellInvoiceNumber', e.target.value)}
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#369282] focus:border-[#369282] placeholder:text-slate-400"
+              placeholder="e.g. INV-SALE-001"
+            />
+          </div>
         </div>
       )}
 

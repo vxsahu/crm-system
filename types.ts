@@ -25,6 +25,7 @@ export interface Product {
   purchasePrice: number;
   soldDate?: string;
   soldPrice?: number;
+  sellInvoiceNumber?: string;
 }
 
 export interface DashboardStats {

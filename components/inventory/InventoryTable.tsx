@@ -52,7 +52,7 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
               <TableHead>Status</TableHead>
               <TableHead>Billing</TableHead>
               <TableHead>Price</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="text-right w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,6 +87,11 @@ export const InventoryTable: React.FC<InventoryTableProps> = ({
                     >
                       {product.status}
                     </Badge>
+                    {product.status === ProductStatus.SOLD && product.sellInvoiceNumber && (
+                      <div className="flex items-center gap-1 mt-1.5 text-xs text-slate-600 font-medium">
+                        <span>{product.sellInvoiceNumber}</span>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
                     {product.billingStatus === BillingStatus.BILLED ? (

@@ -12,6 +12,13 @@ import { InventoryActions } from './inventory/InventoryActions';
 import { InventoryTable } from './inventory/InventoryTable';
 import { ProductModal } from './ProductModal';
 
+/**
+ * InventoryManager — Minimalist (Option B)
+ * - text-base for headings, text-sm for all other text
+ * - grayscale foundation tokens + functional color accents
+ * - conservative interactions and clear affordances
+ */
+
 interface InventoryManagerProps {
   initialFilters?: { status: string; billing: string } | null;
 }
@@ -21,26 +28,27 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Filters / UI state
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [filterBilling, setFilterBilling] = useState<string>('ALL');
   const [filterMonth, setFilterMonth] = useState<string>('ALL');
   const [filterYear, setFilterYear] = useState<string>('ALL');
 
-  // Modal State
+  // Modals & editing
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>(undefined);
 
-  // Bulk Selection State
+  // Selection
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
 
-  // Delete Confirmation State
+  // Delete confirmation
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<'single' | 'bulk'>('single');
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
-  // React to URL search params
+  // sync URL params
   useEffect(() => {
     const status = searchParams.get('status');
     const billing = searchParams.get('billing');
@@ -48,7 +56,6 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
     if (billing) setFilterBilling(billing);
   }, [searchParams]);
 
-  // React to prop changes (legacy support or if passed from parent)
   useEffect(() => {
     if (initialFilters) {
       setFilterStatus(initialFilters.status);
@@ -58,10 +65,12 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
+      const q = searchTerm.trim().toLowerCase();
       const matchesSearch =
-        product.tagNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.serialNumber.toLowerCase().includes(searchTerm.toLowerCase());
+        q === '' ||
+        product.tagNumber.toLowerCase().includes(q) ||
+        product.productName.toLowerCase().includes(q) ||
+        product.serialNumber.toLowerCase().includes(q);
 
       const matchesStatus = filterStatus === 'ALL' || product.status === filterStatus;
       const matchesBilling = filterBilling === 'ALL' || product.billingStatus === filterBilling;
@@ -80,13 +89,12 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
     });
   }, [products, searchTerm, filterStatus, filterBilling, filterMonth, filterYear]);
 
+  // Exports use server-side streaming endpoint with current filters
   const handleExport = () => {
-    // Use server-side streaming export with filters
     const params = new URLSearchParams();
     if (filterStatus !== 'ALL') params.append('status', filterStatus);
     if (filterBilling !== 'ALL') params.append('billing', filterBilling);
-    if (searchTerm) params.append('search', searchTerm);
-    
+    if (searchTerm) params.append('search', searchTerm.trim());
     window.location.href = `/api/products/export?${params.toString()}`;
   };
 
@@ -101,9 +109,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
     setFilterMonth('ALL');
     setFilterYear('ALL');
     setSearchTerm('');
-    router.push('/inventory'); // Clear URL params
+    // reset URL params with router
+    router.push('/inventory');
   };
 
+  // CRUD
   const handleAddProduct = () => {
     setEditingProduct(undefined);
     setIsModalOpen(true);
@@ -144,6 +154,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
       }
     } catch (error) {
       console.error('Delete failed:', error);
+      // keep messaging simple and neutral
       alert('Failed to delete product(s). Please try again.');
     }
     setShowDeleteConfirm(false);
@@ -185,27 +196,31 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
   return (
     <>
       <div className="flex flex-col h-[calc(100vh-85px)] lg:h-[calc(100vh-140px)]">
-        {/* Toolbar */}
-        <div className="pb-6 border-b border-slate-100 flex flex-col gap-6">
-
-          {/* Header Row */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {/* Toolbar (grayscale card with small accent on primary action) */}
+        <div className="pb-6 border-b border-border/60 bg-card">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-4 lg:px-8 py-4">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => router.push('/dashboard')}
-                className="p-2 -ml-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 rounded-full transition-colors"
+                className="p-2 -ml-2 text-muted-foreground hover:bg-muted/20 rounded-full transition-colors text-sm"
                 title="Back to Dashboard"
+                aria-label="Back to Dashboard"
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5 text-foreground" />
               </button>
+
               <div>
-                <h2 className="text-xl font-bold text-slate-800 tracking-tight">Inventory Management</h2>
-                <p className="text-sm text-slate-500">Manage your products, stock, and billing.</p>
+                <h2 className="text-base font-semibold text-foreground tracking-tight">
+                  Inventory Management
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Manage products, stock and billing
+                </p>
               </div>
             </div>
-            
-            {/* Actions moved to top row on desktop for better access */}
-            <div className="hidden lg:block">
+
+            {/* Desktop actions (primary accent used only for primary CTA) */}
+            <div className="hidden lg:flex items-center gap-3">
               <InventoryActions
                 handleExport={handleExport}
                 setIsImportModalOpen={setIsImportModalOpen}
@@ -215,8 +230,8 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
             </div>
           </div>
 
-          {/* Filters Row */}
-          <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+          {/* Filters row */}
+          <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center px-4 lg:px-8 pb-4">
             <InventoryFilters
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
@@ -233,7 +248,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
               handleUnbilledFilter={handleUnbilledFilter}
             />
 
-            {/* Actions shown here on mobile/tablet */}
+            {/* Mobile actions */}
             <div className="lg:hidden w-full">
               <InventoryActions
                 handleExport={handleExport}
@@ -245,20 +260,22 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
           </div>
         </div>
 
-        {/* Bulk Actions Toolbar - Shows when products are selected */}
+        {/* Bulk Actions Toolbar — neutral gray with subtle accent label */}
         {selectedProducts.length > 0 && (
-          <div className="px-4 py-3 bg-brand-50 border-b border-brand-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-brand-900">
+          <div className="px-4 py-3 border-b border-border bg-muted/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-foreground">
                 {selectedProducts.length} product{selectedProducts.length > 1 ? 's' : ''} selected
               </span>
               <button
                 onClick={clearSelection}
-                className="text-xs text-brand-600 hover:text-brand-700 underline"
+                className="text-sm text-muted-foreground hover:underline"
+                aria-label="Clear selection"
               >
                 Clear
               </button>
             </div>
+
             <div className="flex gap-2 w-full sm:w-auto">
               <select
                 onChange={(e) => {
@@ -267,17 +284,20 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
                     e.target.value = '';
                   }
                 }}
-                className="flex-1 sm:flex-none px-3 py-1.5 border border-brand-300 rounded-lg text-sm bg-white text-slate-700 cursor-pointer"
+                className="flex-1 sm:flex-none px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground cursor-pointer"
                 defaultValue=""
+                aria-label="Bulk status update"
               >
-                <option value="" disabled>Update Status...</option>
+                <option value="" disabled>Update status...</option>
                 {Object.values(ProductStatus).map(s => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
+
               <button
                 onClick={handleBulkDelete}
-                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5"
+                className="px-3 py-2 rounded-lg text-sm font-medium bg-danger text-danger-foreground hover:opacity-95 transition-colors flex items-center gap-2"
+                aria-label="Delete selected products"
               >
                 <Trash2 className="w-4 h-4" />
                 Delete
@@ -286,22 +306,27 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
           </div>
         )}
 
-        <InventoryTable
-          filteredProducts={filteredProducts}
-          selectedProducts={selectedProducts}
-          handleSelectAll={handleSelectAll}
-          handleSelectProduct={handleSelectProduct}
-          handleEditProduct={handleEditProduct}
-          handleDeleteProduct={handleDeleteProduct}
-          isFiltered={isFiltered}
-          clearFilters={clearFilters}
-        />
-        
-        <div className="pt-3 border-t border-slate-200 text-xs text-slate-500 flex justify-between">
+        {/* Table */}
+        <div className="flex-1 overflow-auto">
+          <InventoryTable
+            filteredProducts={filteredProducts}
+            selectedProducts={selectedProducts}
+            handleSelectAll={handleSelectAll}
+            handleSelectProduct={handleSelectProduct}
+            handleEditProduct={handleEditProduct}
+            handleDeleteProduct={handleDeleteProduct}
+            isFiltered={isFiltered}
+            clearFilters={clearFilters}
+            // Ensure InventoryTable renders with text-sm for rows and text-base for any section headings
+          />
+        </div>
+
+        <div className="pt-3 border-t border-border text-sm text-muted-foreground flex justify-between px-4 lg:px-8">
           <span>Showing {filteredProducts.length} entries</span>
         </div>
       </div>
 
+      {/* Product modal — neutral, minimal */}
       <ProductModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -309,12 +334,14 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
         initialData={editingProduct}
       />
 
+      {/* Import */}
       <ImportModal
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         onImport={addProducts}
       />
 
+      {/* Confirm modal — destructive action uses danger token */}
       <ConfirmModal
         isOpen={showDeleteConfirm}
         onClose={() => {
@@ -322,7 +349,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
           setProductToDelete(null);
         }}
         onConfirm={confirmDelete}
-        title={deleteTarget === 'bulk' ? 'Delete Multiple Products' : 'Delete Product'}
+        title={deleteTarget === 'bulk' ? 'Delete multiple products' : 'Delete product'}
         message={
           deleteTarget === 'bulk'
             ? `Are you sure you want to delete ${selectedProducts.length} product${selectedProducts.length > 1 ? 's' : ''}? This action cannot be undone.`

@@ -15,6 +15,7 @@ export interface IProduct extends Document {
   gateNumber?: string;
   soldDate?: string;
   soldPrice?: number;
+  sellInvoiceNumber?: string;
   remark?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -43,6 +44,7 @@ const ProductSchema: Schema = new Schema(
     gateNumber: { type: String },
     soldDate: { type: String },
     soldPrice: { type: Number },
+    sellInvoiceNumber: { type: String },
     remark: { type: String },
   },
   {

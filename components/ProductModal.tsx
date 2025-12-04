@@ -52,6 +52,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
     purchasePrice: undefined, 
     soldDate: '',
     soldPrice: undefined,
+    sellInvoiceNumber: '',
     remark: ''
   });
 
@@ -75,6 +76,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
         gateNumber: initialData.gateNumber || '',
         soldDate: initialData.soldDate || '',
         soldPrice: initialData.soldPrice,
+        sellInvoiceNumber: initialData.sellInvoiceNumber || '',
         remark: initialData.remark || ''
       });
       
@@ -121,6 +123,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
         purchasePrice: undefined, // Ensure it resets to undefined (empty input)
         soldDate: '',
         soldPrice: undefined,
+        sellInvoiceNumber: '',
         remark: ''
       });
       setTechSpecs({ ram: '', processor: '', storage: '', color: '', generation: '', custom: '' });

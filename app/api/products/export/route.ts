@@ -48,7 +48,7 @@ export async function GET(request: Request) {
         await writer.write(encoder.encode('\uFEFF'));
 
         // Write Header
-        const headers = ['Tag Number', 'Product Name', 'Category', 'Specs', 'Gate Number', 'Purchase Date', 'Serial No', 'Status', 'Billing', 'Invoice No', 'Price', 'Sold Date', 'Sold Price', 'Remark'];
+        const headers = ['Tag Number', 'Product Name', 'Category', 'Specs', 'Gate Number', 'Purchase Date', 'Serial No', 'Status', 'Billing', 'Invoice', 'Price', 'Sold Date', 'Sold Price', 'Sell Invoice', 'Remark'];
         await writer.write(encoder.encode(headers.join(',') + '\n'));
 
         // Fetch products using a cursor for memory efficiency
@@ -74,6 +74,7 @@ export async function GET(request: Request) {
             p.purchasePrice,
             p.soldDate || '',
             p.soldPrice || '',
+            p.sellInvoiceNumber || '',
             `"${(p.remark || '').replace(/"/g, '""')}"`
           ].join(',');
 

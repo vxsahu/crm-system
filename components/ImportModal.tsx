@@ -64,7 +64,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
         const isExportFormat = 'Tag Number' in row;
 
         // Mapping Logic
-        let tagNumber, productName, serialNumber, category, specifications, status, billingStatus, purchasePrice, invoiceNumber, remark, dateRaw;
+        let tagNumber, productName, serialNumber, category, specifications, status, billingStatus, purchasePrice, invoiceNumber, remark, dateRaw, sellInvoiceNumber;
 
         if (isExportFormat) {
           tagNumber = String(row['Tag Number'] || '');
@@ -75,6 +75,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
           billingStatus = row['Billing'] as BillingStatus;
           invoiceNumber = row['Invoice No'] !== 'N/A' ? String(row['Invoice No']) : '';
           purchasePrice = Number(row['Price']) || 0;
+          sellInvoiceNumber = row['Sell Invoice No'] || '';
           remark = row['Remark'] || '';
           
           // Infer category/specs if possible or set defaults
@@ -137,6 +138,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onImp
           billingStatus: billingStatus as BillingStatus,
           purchasePrice,
           invoiceNumber,
+          sellInvoiceNumber,
           remark
         };
       });

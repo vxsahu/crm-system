@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface TechSpecsSectionProps {
   techSpecs: {
     ram: string;
@@ -7,35 +5,12 @@ interface TechSpecsSectionProps {
     storage: string;
     color: string;
     generation: string;
+    custom: string;
   };
   handleTechSpecChange: (field: keyof TechSpecsSectionProps['techSpecs'], value: string) => void;
   isTechCategory: boolean;
   specifications: string;
-  // The handleChange function should accept a field that is a key of the object it's modifying.
-  // Assuming 'specifications' is a direct property of the state object in the parent component,
-  // we can make the type more specific. If 'Product' is a type defined elsewhere,
-  // we should import it and use `keyof Product`.
-  // For now, let's assume the parent's handleChange can handle any string field.
-  // If the parent's handleChange expects `keyof Product`, then `Product` needs to be defined
-  // and imported, and the type here should be `(field: keyof Product, value: string) => void;`
-  // Given the usage `handleChange('specifications', e.target.value)`,
-  // the most direct fix is to ensure the parent's `handleChange` can accept 'specifications' as a string.
-  // If the parent's `handleChange` is strictly typed to `keyof Product`, then `Product` must include `specifications`.
-  // Without the definition of `Product`, the safest assumption for this component's prop type
-  // that matches its usage is `(field: string, value: string) => void;`
-  // The error message implies the parent is passing `(field: keyof Product, value: any) => void`.
-  // To resolve the incompatibility, the parent's `handleChange` needs to be compatible with `(field: string, value: string) => void`.
-  // Or, if `specifications` is indeed a key of `Product`, then the type should be `(field: 'specifications', value: string) => void;`
-  // or `(field: keyof Pick<Product, 'specifications'>, value: string) => void;`
-  // Let's assume the parent's `handleChange` is generic enough to accept `string` for the field.
-  // If the parent's `handleChange` is `(field: keyof Product, value: any) => void`, and `Product` has a `specifications` key,
-  // then the type here should be `(field: keyof Pick<Product, 'specifications'>, value: string) => void;`
-  // If `Product` is not available, and the parent's `handleChange` is truly `(field: keyof Product, value: any) => void`,
-  // then the parent component needs to be adjusted to pass a compatible function, or `TechSpecsSectionProps` needs to reflect `Product`.
-  // For the purpose of fixing the type error *within* this component's definition,
-  // and assuming 'specifications' is a valid field the parent's handler can manage,
-  // we can make the field type more specific to what is actually passed.
-  handleChange: (field: 'specifications', value: string) => void;
+  handleChange: (field: string, value: string) => void;
   RAM_OPTIONS: string[];
   STORAGE_OPTIONS: string[];
   PROCESSOR_OPTIONS: string[];
@@ -144,6 +119,18 @@ export const TechSpecsSection: React.FC<TechSpecsSectionProps> = ({
                     <option value="">Select Color</option>
                     {COLOR_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                 </select>
+            </div>
+
+            {/* Custom Specs */}
+            <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Custom Specifications</label>
+                <input
+                    type="text"
+                    value={techSpecs.custom}
+                    onChange={(e) => handleTechSpecChange('custom', e.target.value)}
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-[#369282] focus:border-[#369282] placeholder:text-slate-400 text-sm"
+                    placeholder="e.g. Backlit Keyboard, Touch Bar, 100% Battery Health..."
+                />
             </div>
 
             <div className="pt-4 border-t border-slate-200">

@@ -24,6 +24,8 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [filterBilling, setFilterBilling] = useState<string>('ALL');
+  const [filterMonth, setFilterMonth] = useState<string>('ALL');
+  const [filterYear, setFilterYear] = useState<string>('ALL');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,9 +66,19 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
       const matchesStatus = filterStatus === 'ALL' || product.status === filterStatus;
       const matchesBilling = filterBilling === 'ALL' || product.billingStatus === filterBilling;
 
-      return matchesSearch && matchesStatus && matchesBilling;
+      let matchesDate = true;
+      if (filterMonth !== 'ALL' || filterYear !== 'ALL') {
+        const date = new Date(product.purchaseDate);
+        const month = date.getMonth().toString(); // 0-11
+        const year = date.getFullYear().toString();
+
+        if (filterMonth !== 'ALL' && month !== filterMonth) matchesDate = false;
+        if (filterYear !== 'ALL' && year !== filterYear) matchesDate = false;
+      }
+
+      return matchesSearch && matchesStatus && matchesBilling && matchesDate;
     });
-  }, [products, searchTerm, filterStatus, filterBilling]);
+  }, [products, searchTerm, filterStatus, filterBilling, filterMonth, filterYear]);
 
   const handleExport = () => {
     // Use server-side streaming export with filters
@@ -86,6 +98,8 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
   const clearFilters = () => {
     setFilterStatus('ALL');
     setFilterBilling('ALL');
+    setFilterMonth('ALL');
+    setFilterYear('ALL');
     setSearchTerm('');
     router.push('/inventory'); // Clear URL params
   };
@@ -166,7 +180,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
     setSelectedProducts([]);
   };
 
-  const isFiltered = filterStatus !== 'ALL' || filterBilling !== 'ALL' || searchTerm !== '';
+  const isFiltered = filterStatus !== 'ALL' || filterBilling !== 'ALL' || searchTerm !== '' || filterMonth !== 'ALL' || filterYear !== 'ALL';
 
   return (
     <>
@@ -210,6 +224,10 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({ initialFilte
               setFilterStatus={setFilterStatus}
               filterBilling={filterBilling}
               setFilterBilling={setFilterBilling}
+              filterMonth={filterMonth}
+              setFilterMonth={setFilterMonth}
+              filterYear={filterYear}
+              setFilterYear={setFilterYear}
               isFiltered={isFiltered}
               clearFilters={clearFilters}
               handleUnbilledFilter={handleUnbilledFilter}

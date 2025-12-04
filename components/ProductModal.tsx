@@ -31,7 +31,7 @@ const COLOR_OPTIONS = [
   'Graphite', 'Sierra Blue', 'Deep Purple'
 ];
 const GENERATION_OPTIONS = [
-  '14th Gen', '13th Gen', '12th Gen', '11th Gen', '10th Gen',
+  '14th Gen', '13th Gen', '12th Gen', '11th Gen', '10th Gen', '9th Gen', '8th Gen', '7th Gen', '6th Gen', '5th Gen', '4th Gen', '3rd Gen', '2nd Gen', '1st Gen',
   'M1', 'M2', 'M3', 'M4',
   'Ryzen 7000', 'Ryzen 5000', 'Ryzen 3000'
 ];
@@ -60,7 +60,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
     processor: '',
     storage: '',
     color: '',
-    generation: ''
+    generation: '',
+    custom: ''
   });
 
   const isTechCategory = ['Laptop', 'Desktop', 'Mobile', 'Tablet'].includes(formData.category || '');
@@ -86,15 +87,24 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
          const foundColor = COLOR_OPTIONS.find(c => specs.includes(c)) || '';
          const foundGen = GENERATION_OPTIONS.find(g => specs.includes(g)) || '';
          
+         // Extract custom specs by removing known parts
+         let customSpec = specs;
+         [foundRam, foundStorage, foundProc, foundColor, foundGen].forEach(part => {
+           if (part) customSpec = customSpec.replace(part, '');
+         });
+         // Clean up separators and extra spaces
+         customSpec = customSpec.replace(/\|\s*\|/g, '|').replace(/^\|\s*/, '').replace(/\s*\|$/, '').replace(/\s+\|\s+/g, ' | ').trim();
+         
          setTechSpecs({ 
              ram: foundRam, 
              storage: foundStorage, 
              processor: foundProc, 
              color: foundColor,
-             generation: foundGen
+             generation: foundGen,
+             custom: customSpec
          });
       } else {
-        setTechSpecs({ ram: '', processor: '', storage: '', color: '', generation: '' });
+        setTechSpecs({ ram: '', processor: '', storage: '', color: '', generation: '', custom: '' });
       }
     } else {
       setFormData({
@@ -113,14 +123,21 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
         soldPrice: undefined,
         remark: ''
       });
-      setTechSpecs({ ram: '', processor: '', storage: '', color: '', generation: '' });
+      setTechSpecs({ ram: '', processor: '', storage: '', color: '', generation: '', custom: '' });
     }
   }, [initialData, isOpen]);
 
   // Sync techSpecs to formData.specifications
   useEffect(() => {
     if (isTechCategory && isOpen) {
-        const parts = [techSpecs.processor, techSpecs.generation, techSpecs.ram, techSpecs.storage, techSpecs.color].filter(Boolean);
+        const parts = [
+          techSpecs.processor, 
+          techSpecs.generation, 
+          techSpecs.ram, 
+          techSpecs.storage, 
+          techSpecs.color,
+          techSpecs.custom
+        ].filter(Boolean);
         if (parts.length > 0) {
             setFormData(prev => ({ ...prev, specifications: parts.join(' | ') }));
         } else {
@@ -191,7 +208,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onS
                 handleTechSpecChange={handleTechSpecChange} 
                 isTechCategory={isTechCategory}
                 specifications={formData.specifications || ''}
-                handleChange={handleChange}
+                handleChange={handleChange as (field: string, value: string) => void}
                 RAM_OPTIONS={RAM_OPTIONS}
                 STORAGE_OPTIONS={STORAGE_OPTIONS}
                 PROCESSOR_OPTIONS={PROCESSOR_OPTIONS}

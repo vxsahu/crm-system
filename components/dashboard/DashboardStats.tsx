@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatCard } from '../StatCard';
-import { DollarSign, TrendingUp, ShoppingBag, AlertCircle } from 'lucide-react';
+import { IndianRupee, TrendingUp, ShoppingBag, AlertCircle } from 'lucide-react';
 import { ProductStatus, BillingStatus } from '@/types';
 
 interface DashboardStatsProps {
@@ -29,7 +29,7 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
       <StatCard
         title="Total Revenue"
         value={formatCurrency(totalRevenue)}
-        icon={DollarSign}
+        icon={IndianRupee}
         description={`From ${soldCount} sold items`}
         colorClass="text-success-700"
         onClick={() => handleNavigate({ status: ProductStatus.SOLD, billing: 'ALL' })}
